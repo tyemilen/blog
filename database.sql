@@ -1,0 +1,7 @@
+CREATE TABLE `articles` (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	slug VARCHAR(255) UNIQUE NOT NULL,
+	title VARCHAR(55) NOT NULL,
+	content TEXT NOT NULL,
+	created_at INTEGER DEFAULT (unixepoch())
+);

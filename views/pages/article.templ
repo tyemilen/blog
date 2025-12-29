@@ -1,0 +1,17 @@
+package pages
+
+import (
+	"dokinar.ik/blog/services"
+	"dokinar.ik/blog/views/layouts"
+)
+
+templ Article(article services.Article) {
+	@layouts.Default(article.Title) {
+		<h1>{ article.Title }</h1>
+		<article>
+			@templ.Raw(article.Content)
+
+			<script>hljs.highlightAll();</script>
+		</article>
+	}
+}
