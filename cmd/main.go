@@ -120,11 +120,12 @@ func confirm(s string) bool {
 
 		answer := strings.ToLower(strings.TrimSpace(res))
 
-		if answer == "y" || answer == "yes" {
+		switch answer {
+		case "y", "yes":
 			return true
-		} else if answer == "n" || answer == "no" {
+		case "n", "no":
 			return false
-		} else {
+		default:
 			fmt.Println("Invalid input")
 		}
 	}
