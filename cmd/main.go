@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"database/sql"
 	"fmt"
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 
 	"dokinar.ik/blog/server"
 	"dokinar.ik/blog/services"
@@ -13,7 +15,7 @@ import (
 )
 
 func help() {
-	fmt.Println("commands:\n\tserve <port>\n\tnew <article>\n\tedit <slug>")
+	fmt.Println("commands:\n\tserve <port>\n\tnew <article>\n\tedit <slug>\n\tdel <slug>")
 }
 
 func newArticle(db *sql.DB, title string) {
@@ -105,6 +107,28 @@ func editArticle(db *sql.DB, slug string) {
 	fmt.Println("Article updated:", slug)
 }
 
+func confirm(s string) bool {
+	reader := bufio.NewReader(os.Stdin)
+
+	for {
+		fmt.Printf("%s [y/n]: ", s)
+
+		res, err := reader.ReadString('\n')
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		answer := strings.ToLower(strings.TrimSpace(res))
+
+		if answer == "y" || answer == "yes" {
+			return true
+		} else if answer == "n" || answer == "no" {
+			return false
+		} else {
+			fmt.Println("Invalid input")
+		}
+	}
+}
 func main() {
 	db, err := sql.Open("sqlite3", "./database.db")
 
@@ -126,6 +150,24 @@ func main() {
 		newArticle(db, os.Args[2])
 	case "edit":
 		editArticle(db, os.Args[2])
+	case "del":
+		article, err := services.FindArticle(db, os.Args[2])
+
+		if err != nil {
+			log.Fatalln("Article not found")
+		}
+
+		fmt.Printf(
+			"Article:\n\tid: %d\n\tslug: %s\n\ttitle: %s\n\tcontent: %s\n\tcreated: %d\n",
+			article.ID, article.Slug, article.Title, article.Content[:56], article.Created_at)
+
+		confirmdel := confirm("Delete?")
+
+		if confirmdel {
+			fmt.Println("Done")
+		} else {
+			log.Fatalln("Abort")
+		}
 	default:
 		help()
 	}

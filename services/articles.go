@@ -2,7 +2,6 @@ package services
 
 import (
 	"database/sql"
-	"fmt"
 	"strings"
 
 	"github.com/gomarkdown/markdown"
@@ -42,7 +41,7 @@ func FindArticle(db *sql.DB, slug string) (Article, error) {
 	var article Article
 
 	if err := row.Scan(&article.ID, &article.Slug, &article.Title, &article.Content, &article.Created_at); err != nil {
-		return article, fmt.Errorf("getArticles: %s", err)
+		return article, err
 	}
 
 	return article, nil
@@ -52,7 +51,7 @@ func GetArticles(db *sql.DB) ([]Article, error) {
 	rows, err := db.Query("SELECT * FROM `articles`;")
 
 	if err != nil {
-		return nil, fmt.Errorf("getArticles: %s", err)
+		return nil, err
 	}
 
 	var articles []Article
@@ -61,7 +60,7 @@ func GetArticles(db *sql.DB) ([]Article, error) {
 		var article Article
 
 		if err := rows.Scan(&article.ID, &article.Slug, &article.Title, &article.Content, &article.Created_at); err != nil {
-			return nil, fmt.Errorf("getArticles: %s", err)
+			return nil, err
 		}
 
 		articles = append(articles, article)
@@ -71,9 +70,26 @@ func GetArticles(db *sql.DB) ([]Article, error) {
 }
 
 func UpdateArticle(db *sql.DB, slug string, content string) error {
-	query := `UPDATE articles SET content = ? WHERE slug = ?`
+	result, err := db.Exec("UPDATE `articles` SET content = ? WHERE slug = ?", content, slug)
+	if err != nil {
+		return err
+	}
 
-	result, err := db.Exec(query, content, slug)
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rows == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
+}
+
+func DeleteArticle(db *sql.DB, slug string) error {
+	result, err := db.Exec("DELETE FROM `articles` WHERE slug = ?", slug)
+
 	if err != nil {
 		return err
 	}
