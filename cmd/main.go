@@ -130,6 +130,7 @@ func confirm(s string) bool {
 		}
 	}
 }
+
 func main() {
 	db, err := sql.Open("sqlite3", "./database.db")
 

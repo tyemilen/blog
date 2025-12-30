@@ -9,11 +9,6 @@ templ Article(article services.Article) {
 	@layouts.Default(article.Title, Highlight(article.Languages)) {
 		<h1>{ article.Title }</h1>
 		<article>
-			<p>Included langs:</p>
-
-			for _, lang := range article.Languages {
-				<p>{lang}</p>
-			}
 			@templ.Raw(article.Content)
 
 			if len(article.Languages) > 0 {
