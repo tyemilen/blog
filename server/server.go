@@ -21,6 +21,7 @@ func Serve(addr string, db *sql.DB) {
 		articles, err := services.GetArticles(db)
 
 		if err != nil {
+			fmt.Printf("Something went wrong while getting articles: %s\n", err)
 			return
 		}
 

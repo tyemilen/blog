@@ -6,7 +6,7 @@ import (
 	"dokinar.ik/blog/views/layouts"
 )
 templ Index(articles []services.Article) {
-	@layouts.Default("Index") {
+	@layouts.Default("Index", templ.NopComponent) {
 		<ul>
 			for _, article := range articles {
 			<li class="article-link">

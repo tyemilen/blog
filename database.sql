@@ -3,5 +3,6 @@ CREATE TABLE `articles` (
 	slug VARCHAR(255) UNIQUE NOT NULL,
 	title VARCHAR(55) NOT NULL,
 	content TEXT NOT NULL,
+	languages TEXT NOT NULL DEFAULT '[]',
 	created_at INTEGER DEFAULT (unixepoch())
 );

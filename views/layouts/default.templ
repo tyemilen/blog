@@ -3,7 +3,7 @@ import (
 	"dokinar.ik/blog/views/components"
 )
 
-templ Default(title string) {
+templ Default(title string, head templ.Component) {
 	<!DOCTYPE html>
 	<html>
 		<head>
@@ -12,13 +12,8 @@ templ Default(title string) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 			<link href="/assets/css/style.css" rel="stylesheet"/>
-			<link rel="stylesheet" href="/assets/css/hljs.css" />
 
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-			<script src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/go.min.js"></script>
-			<script src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/javascript.min.js"></script>
-			<script src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/typescript.min.js"></script>
-			<script src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/haskell.min.js"></script>
+			@head
 		</head>
 		<body>
 			@components.Header()

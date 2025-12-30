@@ -6,12 +6,32 @@ import (
 )
 
 templ Article(article services.Article) {
-	@layouts.Default(article.Title) {
+	@layouts.Default(article.Title, Highlight(article.Languages)) {
 		<h1>{ article.Title }</h1>
 		<article>
+			<p>Included langs:</p>
+
+			for _, lang := range article.Languages {
+				<p>{lang}</p>
+			}
 			@templ.Raw(article.Content)
 
-			<script>hljs.highlightAll();</script>
+			if len(article.Languages) > 0 {
+				<script>hljs.highlightAll();</script>
+			}
 		</article>
+	}
+}
+
+templ Highlight(langs []string) {
+	if len(langs) > 0 {
+		<link rel="stylesheet" href="/assets/css/hljs.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+		for _, lang := range langs {
+			<script src={
+				"https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/" + lang + ".min.js"
+			}></script>
+		}
 	}
 }
